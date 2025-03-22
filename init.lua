@@ -548,13 +548,6 @@ require('lazy').setup({
       --    That is to say, every time a new file is opened that is associated with
       --    an lsp (for example, opening `main.rs` is associated with `rust_analyzer`) this
       --    function will be executed to configure the current buffer
-      require('lspconfig')['tinymist'].setup {
-        settings = {
-          formatterMode = 'typstyle',
-          exportPdf = 'onType',
-          semanticTokens = 'disable',
-        },
-      }
 
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
@@ -678,15 +671,36 @@ require('lazy').setup({
         --clang_format = {},
         codelldb = {},
         -- gopls = {},
-        -- pyright = {},
+        --pyright = {},
+        basedpyright = {
+          settings = {
+            basedpyright = {
+              -- Using Ruff's import organizer
+              disableOrganizeImports = true,
+              typeCheckingMode = 'basic',
+            },
+          },
+        },
         svelte = {},
         svlangserver = {},
-        pylsp = {},
+        -- pylsp = {},
         -- rust_analyzer = {},
         tailwindcss = {},
-        tinymist = {},
-        mypy = {},
-        ruff = {},
+        tinymist = {
+          settings = {
+            formatterMode = 'typstyle',
+            exportPdf = 'onType',
+            semanticTokens = 'disable',
+          },
+        },
+        -- mypy = {},
+        ruff = {
+          init_options = {
+            settings = {
+              lint = { enable = false },
+            },
+          },
+        },
 
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -736,14 +750,16 @@ require('lazy').setup({
         automatic_installation = true,
         ensure_installed = {
           'clangd',
-          'codelldb',
+          --'codelldb',
           'svelte',
           'svlangserver',
-          'pylsp',
+          --'pylsp',
           'tailwindcss',
           'tinymist',
           'ruff',
-          'mypy',
+          'basedpyright',
+          --'pyright',
+          --'mypy',
         },
         handlers = {
           function(server_name)
@@ -951,6 +967,7 @@ require('lazy').setup({
   },
 
   { -- You can easily change to a different colorscheme.
+
     -- Change the name of the colorscheme plugin below, and then
     -- change the command in the config to whatever the name of that colorscheme is.
     --
@@ -1095,7 +1112,7 @@ require('lazy').setup({
   --
   require 'kickstart.plugins.debug',
   require 'kickstart.plugins.indent_line',
-  require 'kickstart.plugins.lint',
+  -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
   --require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
